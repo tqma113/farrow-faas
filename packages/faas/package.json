@@ -1,0 +1,22 @@
+{
+  "name": "farrow-faas-cli",
+  "version": "1.10.6",
+  "main": "dist/index.js",
+  "bin": {
+    "farrow-faas": "bin.js"
+  },
+  "files": [
+    "src",
+    "dist",
+    "esm"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^8.0.0",
+    "tslib": "^2.1.0"
+  }
+}

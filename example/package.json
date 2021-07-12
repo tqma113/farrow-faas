@@ -1,0 +1,13 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "farrow-faas -e ./routes.ts"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.4",
+    "farrow-faas-cli": "1.10.6"
+  }
+}
