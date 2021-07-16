@@ -37,7 +37,7 @@ export const getFunc = async (pwd: string, func: DraftRoute['func']): Promise<Fu
   return (await func()).default
 }
 
-export const loadModule = (module: any): any => {
+export const loadModule = <M = any>(module: any): M => {
   return module.default || module
 };
 

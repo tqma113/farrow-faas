@@ -25,6 +25,7 @@ export type BundleScriptOptions = {
   dir?: string
   output?: string
   entry?: string
+  port?: string
 }
 program
   .command('bundle')
@@ -32,6 +33,7 @@ program
   .option('-d, --dir <dir>', 'root path')
   .option('-o, --output <output>', 'output path')
   .option('-e, --entry <entry>', 'entry routes file path')
+  .option('-p, --port <port>', 'listen port')
   .action((options: BundleScriptOptions) => {
     bundle(options)
   })

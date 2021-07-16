@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "farrow-faas -e ./routes.ts"
+    "dev": "farrow-faas dev --entry ./routes.ts",
+    "bundle": "farrow-faas bundle --entry ./routes.ts --output dist",
+    "server": "node ./dist/routes.js"
   },
   "devDependencies": {
     "typescript": "^4.3.4",

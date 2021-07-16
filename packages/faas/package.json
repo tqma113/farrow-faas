@@ -16,7 +16,20 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/bytes": "^3.1.1",
+    "@types/co-body": "^5.1.1",
+    "@types/type-is": "^1.6.3",
+    "bytes": "^3.1.0",
+    "co-body": "^6.1.0",
     "commander": "^8.0.0",
-    "tslib": "^2.1.0"
+    "esbuild": "^0.12.15",
+    "leven": "^3.1.0",
+    "module": "^1.2.5",
+    "path-to-regexp": "^6.2.0",
+    "tslib": "^2.1.0",
+    "type-is": "^1.6.18"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5"
   }
 }

@@ -22,6 +22,6 @@
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna clean --yes && rm -rf node_modules",
-    "setup": "yarn && lerna run build"
+    "setup": "lerna bootstrap && lerna run build"
   }
 }
