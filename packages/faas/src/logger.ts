@@ -1,7 +1,5 @@
-import chalk from 'chalk'
 import util from 'util'
 import bytes from 'bytes'
-import { prettyTime } from './utils'
 import type { IncomingMessage } from 'http'
 
 const colorCodes = {
@@ -12,11 +10,6 @@ const colorCodes = {
   2: 'green' as const,
   1: 'green' as const,
   0: 'yellow' as const,
-}
-
-const getColor = (str: string, code: number): string => {
-  const method = colorCodes[code] ?? 'yellow'
-  return chalk[method](str)
 }
 
 export type LoggerArgs = {
@@ -43,7 +36,7 @@ export const createLogger = (options?: LoggerOptions) => {
   }
 
   const logInput = (method: string, url: string) => {
-    print(`  ${chalk.gray('<--')} ${chalk.bold('%s')} ${chalk.gray('%s')}`, method, url)
+    print(`  <-- %s %s`, method, url)
   }
 
   const logOutput = (
@@ -54,14 +47,11 @@ export const createLogger = (options?: LoggerOptions) => {
     contentLength: number,
     event: LoggerEvent,
   ) => {
-    const colorCode = (status / 100) | 0
     const length = [204, 205, 304].includes(status) ? '' : contentLength ? bytes(contentLength) : '-'
-    const upstream = event === 'error' ? chalk.red('xxx') : event === 'close' ? chalk.yellow('-x-') : chalk.gray('-->')
+    const upstream = event === 'error' ? 'xxx' : event === 'close' ? '-x-' : '-->'
 
     print(
-      `  ${upstream} ${chalk.bold('%s')} ${chalk.gray('%s')} ${getColor('%s', colorCode)} ${chalk.gray(
-        '%s',
-      )} ${chalk.gray('%s')}`,
+      `  ${upstream} %s %s %s %s`,
       method,
       url,
       status,
@@ -75,4 +65,31 @@ export const createLogger = (options?: LoggerOptions) => {
     logInput,
     logOutput,
   }
+}
+
+export type PrettyNumberOptions = {
+  delimiter?: string
+  separator?: string
+}
+export const defaultPrettyNumberOptions: Required<PrettyNumberOptions> = {
+  delimiter: ',',
+  separator: '.',
+}
+
+export const prettyNumber = function (number: number | string, options?: PrettyNumberOptions) {
+  const config = {
+    ...defaultPrettyNumberOptions,
+    ...options,
+  }
+  const { delimiter, separator } = config
+  const [first, ...rest] = number.toString().split('.')
+  const text = first.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, `$1${delimiter}`)
+
+  return [text, ...rest].join(separator)
+}
+
+
+export const prettyTime = (start: number): string => {
+  const delta = Date.now() - start
+  return prettyNumber(delta < 10000 ? `${delta}ms` : `${Math.round(delta / 1000)}s`)
 }

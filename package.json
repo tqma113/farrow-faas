@@ -14,11 +14,6 @@
     "lerna": "^4.0.0",
     "ts-node": "^10.0.0"
   },
-  "dependencies": {
-    "farrow-api": "^1.10.8",
-    "farrow-pipeline": "^1.10.6",
-    "farrow-schema": "^1.10.8"
-  },
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna clean --yes && rm -rf node_modules",

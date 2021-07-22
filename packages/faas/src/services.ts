@@ -1,4 +1,3 @@
-import path from 'path'
 import { match, MatchFunction } from 'path-to-regexp'
 import type { JsonType } from 'farrow-schema'
 import type { FuncType } from 'farrow-faas-runtime'

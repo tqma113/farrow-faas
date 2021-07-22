@@ -1,6 +1,7 @@
 import { createServer, RequestListener, IncomingMessage, ServerResponse } from 'http'
-import typeis from 'type-is'
-import parseBody, { Options as BodyOptions } from 'co-body'
+import inflate from 'inflation'
+import raw from 'raw-body'
+import typer from 'media-typer'
 import { LoggerOptions, LoggerEvent, createLogger } from './logger'
 import type { JsonType } from 'farrow-schema'
 
@@ -19,7 +20,7 @@ export const createHttpServer = (handleRequest: RequestListener, options?: Serve
 
   const logger = config.logger ? createLogger(loggerOptions) : null
 
-  const handle: RequestListener = async (req, res) => {
+  const handle: RequestListener = (req, res) => {
     if (logger) {
       const startTime = Date.now()
       const method = req.method ?? 'GET'
@@ -59,7 +60,7 @@ export const createHttpServer = (handleRequest: RequestListener, options?: Serve
     }
 
     try {
-      const json = await handleRequest(req, res)
+      const json = handleRequest(req, res)
       const content = JSON.stringify(json)
       const length = Buffer.byteLength(content)
       res.setHeader('Content-Type', 'application/json')
@@ -80,11 +81,8 @@ export const createHttpServer = (handleRequest: RequestListener, options?: Serve
     }
   }
 
-  const server = createServer(handle)
-
-  return server
+  return createServer(handle)
 }
-
 
 export const getContentLength = (res: ServerResponse) => {
   const contentLength = res.getHeader('Content-Length')
@@ -98,12 +96,8 @@ export const getContentLength = (res: ServerResponse) => {
   return contentLength
 }
 
-const jsonTypes = ['json', 'application/*+json', 'application/csp-report']
-const formTypes = ['urlencoded']
-const textTypes = ['text']
-
-export const getBody = async (req: IncomingMessage, options?: BodyOptions) => {
-  const type = typeis(req, jsonTypes) || typeis(req, formTypes) || typeis(req, textTypes)
+export const getBody = async (req: IncomingMessage, options?: ParseBodyOptions) => {
+  const type = isJsonType(req)
 
   if (type) {
     const body = await parseBody(req, options)
@@ -146,5 +140,127 @@ const findBasename = (basenames: string[], pathname: string) => {
   return {
     basename: '',
     pathname,
+  }
+}
+
+const jsonTypes = ['json', 'application/*+json', 'application/csp-report']
+
+export const isJsonType = (req: IncomingMessage): boolean => {
+  // no body
+  if (!hasbody(req)) {
+    return false
+  }
+
+  // request content type
+  const value = tryNormalizeType(req.headers['content-type']) || ''
+
+  for(let i = 0; i < jsonTypes.length; i++) {
+    if (mimeMatch(normalize(jsonTypes[i]), value)) {
+      return true
+    }
+  }
+
+  return false
+}
+const hasbody = (req: IncomingMessage): boolean => {
+  return req.headers['transfer-encoding'] !== undefined ||
+    !isNaN(Number(req.headers['content-length']))
+}
+
+const mimeMatch = (expected: string, actual: string): boolean => {
+  // split types
+  var actualParts = actual.split('/')
+  var expectedParts = expected.split('/')
+
+  // invalid format
+  if (actualParts.length !== 2 || expectedParts.length !== 2) {
+    return false
+  }
+
+  // validate type
+  if (expectedParts[0] !== '*' && expectedParts[0] !== actualParts[0]) {
+    return false
+  }
+
+  // validate suffix wildcard
+  if (expectedParts[1].substr(0, 2) === '*+') {
+    return expectedParts[1].length <= actualParts[1].length + 1 &&
+      expectedParts[1].substr(1) === actualParts[1].substr(1 - expectedParts[1].length)
+  }
+
+  // validate subtype
+  if (expectedParts[1] !== '*' && expectedParts[1] !== actualParts[1]) {
+    return false
+  }
+
+  return true
+}
+
+const normalizeType = (value: string): string => {
+  // parse the type
+  var type = typer.parse(value)
+
+  // remove the parameters
+  // @ts-ignore
+  type.parameters = undefined
+
+  // reformat it
+  return typer.format(type)
+}
+
+const tryNormalizeType = (value: string | undefined): string | null  => {
+  if (!value) {
+    return null
+  }
+
+  try {
+    return normalizeType(value)
+  } catch (err) {
+    return null
+  }
+}
+
+const normalize = (type: string): string => {
+  if (type[0] === '+') {
+    // "+json" -> "*/*+json" expando
+    return '*/*' + type
+  }
+
+  return type
+}
+
+export type ParseBodyOptions = {
+  limit?: string | number
+  strict?: boolean
+  length?: number
+}
+
+const strictJSONReg = /^[\x20\x09\x0a\x0d]*(\[|\{)/;
+
+export const parseBody = async (req: IncomingMessage, options: ParseBodyOptions = {}): Promise<any> => {
+  const parse = (str: string): any => {
+    if (!strict) return str ? JSON.parse(str) : str;
+    // strict mode always return object
+    if (!str) return {};
+    // strict JSON test
+    if (!strictJSONReg.test(str)) {
+      throw new SyntaxError('invalid JSON, only supports object and array');
+    }
+    return JSON.parse(str);
+  }
+
+  const len = req.headers['content-length'];
+  const encoding = req.headers['content-encoding'] || 'identity';
+  if (len && encoding === 'identity') options.length = ~~len;
+  options.limit = options.limit || '1mb';
+  const strict = options.strict !== false;
+
+  const str = await raw(inflate(req), {...options, encoding: 'utf8'});
+  try {
+    return parse(str);
+  } catch (err) {
+    err.status = 400;
+    err.body = str;
+    throw err;
   }
 }
