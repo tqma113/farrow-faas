@@ -14,3 +14,4 @@ FAAS tools chain for farrow.
   * [ ] runtime 设计
   * [ ] 没有 async hook 是否有风险
 * [ ] API 是否可以 decorator + function 而不是 creator + schema + function
+* [ ] slim bundle
