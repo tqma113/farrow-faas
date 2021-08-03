@@ -5,3 +5,7 @@ tsconfig.tsbuildinfo
 dist
 
 esm
+
+yarn.lock
+
+package-lock.json

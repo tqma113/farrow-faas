@@ -1,7 +1,3 @@
 import type { StartScriptOptions } from '../bin'
 
-export const start = ({}: StartScriptOptions) => {
-
-
-
-}
+export const start = ({}: StartScriptOptions) => {}

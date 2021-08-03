@@ -6,17 +6,19 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "example"
+      "examples/*"
     ]
   },
   "devDependencies": {
     "@types/node": "^15.12.5",
     "lerna": "^4.0.0",
+    "prettier": "^2.3.2",
     "ts-node": "^10.0.0"
   },
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna clean --yes && rm -rf node_modules",
-    "setup": "lerna bootstrap && lerna run build"
+    "setup": "lerna bootstrap && lerna run build",
+    "format": "prettier . --write"
   }
 }

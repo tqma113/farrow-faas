@@ -1,0 +1,15 @@
+{
+  "name": "example-middleware",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "farrow-faas dev --entry ./routes.ts",
+    "bundle": "farrow-faas bundle --entry ./routes.ts --output dist",
+    "server": "node ./dist/routes.js"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.4",
+    "farrow-faas-cli": "1.10.6"
+  }
+}

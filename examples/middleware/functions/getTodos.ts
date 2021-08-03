@@ -1,9 +1,16 @@
-import { createFunc, Struct, Union, Literal, List, TypeOf } from "farrow-faas-runtime";
+import {
+  createFunc,
+  Struct,
+  Union,
+  Literal,
+  List,
+  TypeOf,
+} from 'farrow-faas-runtime'
 
 const Todo = Struct({
   content: String,
   createTime: Number,
-});
+})
 
 export default createFunc(
   {
@@ -12,60 +19,60 @@ export default createFunc(
     },
     output: Union(
       {
-        type: Literal("GetTodosSuccess"),
+        type: Literal('GetTodosSuccess'),
         todos: List(Todo),
       },
       {
-        type: Literal("UnknownID"),
+        type: Literal('UnknownID'),
         message: String,
-      }
+      },
     ),
   },
   ({ id }) => {
     if (mockData[id]) {
       return {
-        type: "GetTodosSuccess" as const,
+        type: 'GetTodosSuccess' as const,
         todos: mockData[id],
-      };
+      }
     } else {
       return {
-        type: "UnknownID" as const,
-        message: "unknown id",
-      };
+        type: 'UnknownID' as const,
+        message: 'unknown id',
+      }
     }
-  }
-);
+  },
+)
 
-const now = Date.now();
+const now = Date.now()
 
-type Todo = TypeOf<typeof Todo>;
+type Todo = TypeOf<typeof Todo>
 const mockData: Record<string, Todo[]> = {
   foo: [
     {
-      content: "foo1",
+      content: 'foo1',
       createTime: now,
     },
     {
-      content: "foo2",
+      content: 'foo2',
       createTime: now,
     },
     {
-      content: "foo3",
+      content: 'foo3',
       createTime: now,
     },
   ],
   bar: [
     {
-      content: "bar1",
+      content: 'bar1',
       createTime: now,
     },
     {
-      content: "bar2",
+      content: 'bar2',
       createTime: now,
     },
     {
-      content: "bar3",
+      content: 'bar3',
       createTime: now,
     },
   ],
-};
+}

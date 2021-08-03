@@ -1,4 +1,9 @@
-import { createServer, RequestListener, IncomingMessage, ServerResponse } from 'http'
+import {
+  createServer,
+  RequestListener,
+  IncomingMessage,
+  ServerResponse,
+} from 'http'
 import inflate from 'inflation'
 import raw from 'raw-body'
 import typer from 'media-typer'
@@ -8,19 +13,26 @@ import type { JsonType } from 'farrow-schema'
 export type ServerOptions = {
   logger?: boolean | LoggerOptions
 }
-export type RequestHandler = (req: IncomingMessage, res: ServerResponse) => JsonType | Promise<JsonType>
-export const createHttpServer = (handleRequest: RequestListener, options?: ServerOptions) => {
+export type RequestHandler = (
+  req: IncomingMessage,
+  res: ServerResponse,
+) => JsonType | Promise<JsonType>
+export const createHttpServer = (
+  handleRequest: RequestHandler,
+  options?: ServerOptions,
+) => {
   const isNotProduction = process.env.NODE_ENV !== 'production'
   const config: ServerOptions = {
     logger: isNotProduction,
     ...options,
   }
 
-  const loggerOptions: LoggerOptions = !config.logger || typeof config.logger === 'boolean' ? {} : config.logger
+  const loggerOptions: LoggerOptions =
+    !config.logger || typeof config.logger === 'boolean' ? {} : config.logger
 
   const logger = config.logger ? createLogger(loggerOptions) : null
 
-  const handle: RequestListener = (req, res) => {
+  const handle: RequestListener = async (req, res) => {
     if (logger) {
       const startTime = Date.now()
       const method = req.method ?? 'GET'
@@ -32,7 +44,14 @@ export const createHttpServer = (handleRequest: RequestListener, options?: Serve
       const logOutput = (event: LoggerEvent) => {
         if (hasLogOut) return
         hasLogOut = true
-        logger?.logOutput(method, url, res.statusCode, startTime, contentLength || getContentLength(res), event)
+        logger?.logOutput(
+          method,
+          url,
+          res.statusCode,
+          startTime,
+          contentLength || getContentLength(res),
+          event,
+        )
       }
 
       logger.logInput(method, url)
@@ -60,7 +79,7 @@ export const createHttpServer = (handleRequest: RequestListener, options?: Serve
     }
 
     try {
-      const json = handleRequest(req, res)
+      const json = await handleRequest(req, res)
       const content = JSON.stringify(json)
       const length = Buffer.byteLength(content)
       res.setHeader('Content-Type', 'application/json')
@@ -96,7 +115,10 @@ export const getContentLength = (res: ServerResponse) => {
   return contentLength
 }
 
-export const getBody = async (req: IncomingMessage, options?: ParseBodyOptions) => {
+export const getBody = async (
+  req: IncomingMessage,
+  options?: ParseBodyOptions,
+) => {
   const type = isJsonType(req)
 
   if (type) {
@@ -107,7 +129,10 @@ export const getBody = async (req: IncomingMessage, options?: ParseBodyOptions) 
   return null
 }
 
-export const handleBasenames = <T extends { pathname: string }>(basenames: string[], requestInfo: T) => {
+export const handleBasenames = <T extends { pathname: string }>(
+  basenames: string[],
+  requestInfo: T,
+) => {
   const { basename, pathname } = findBasename(basenames, requestInfo.pathname)
 
   const newRequestInfo = {
@@ -143,7 +168,12 @@ const findBasename = (basenames: string[], pathname: string) => {
   }
 }
 
-const jsonTypes = ['json', 'application/*+json', 'application/csp-report']
+const jsonTypes = [
+  'json',
+  'application/json',
+  'application/*+json',
+  'application/csp-report',
+]
 
 export const isJsonType = (req: IncomingMessage): boolean => {
   // no body
@@ -154,7 +184,7 @@ export const isJsonType = (req: IncomingMessage): boolean => {
   // request content type
   const value = tryNormalizeType(req.headers['content-type']) || ''
 
-  for(let i = 0; i < jsonTypes.length; i++) {
+  for (let i = 0; i < jsonTypes.length; i++) {
     if (mimeMatch(normalize(jsonTypes[i]), value)) {
       return true
     }
@@ -163,8 +193,10 @@ export const isJsonType = (req: IncomingMessage): boolean => {
   return false
 }
 const hasbody = (req: IncomingMessage): boolean => {
-  return req.headers['transfer-encoding'] !== undefined ||
+  return (
+    req.headers['transfer-encoding'] !== undefined ||
     !isNaN(Number(req.headers['content-length']))
+  )
 }
 
 const mimeMatch = (expected: string, actual: string): boolean => {
@@ -184,8 +216,11 @@ const mimeMatch = (expected: string, actual: string): boolean => {
 
   // validate suffix wildcard
   if (expectedParts[1].substr(0, 2) === '*+') {
-    return expectedParts[1].length <= actualParts[1].length + 1 &&
-      expectedParts[1].substr(1) === actualParts[1].substr(1 - expectedParts[1].length)
+    return (
+      expectedParts[1].length <= actualParts[1].length + 1 &&
+      expectedParts[1].substr(1) ===
+        actualParts[1].substr(1 - expectedParts[1].length)
+    )
   }
 
   // validate subtype
@@ -208,7 +243,7 @@ const normalizeType = (value: string): string => {
   return typer.format(type)
 }
 
-const tryNormalizeType = (value: string | undefined): string | null  => {
+const tryNormalizeType = (value: string | undefined): string | null => {
   if (!value) {
     return null
   }
@@ -235,32 +270,35 @@ export type ParseBodyOptions = {
   length?: number
 }
 
-const strictJSONReg = /^[\x20\x09\x0a\x0d]*(\[|\{)/;
+const strictJSONReg = /^[\x20\x09\x0a\x0d]*(\[|\{)/
 
-export const parseBody = async (req: IncomingMessage, options: ParseBodyOptions = {}): Promise<any> => {
+export const parseBody = async (
+  req: IncomingMessage,
+  options: ParseBodyOptions = {},
+): Promise<any> => {
   const parse = (str: string): any => {
-    if (!strict) return str ? JSON.parse(str) : str;
+    if (!strict) return str ? JSON.parse(str) : str
     // strict mode always return object
-    if (!str) return {};
+    if (!str) return {}
     // strict JSON test
     if (!strictJSONReg.test(str)) {
-      throw new SyntaxError('invalid JSON, only supports object and array');
+      throw new SyntaxError('invalid JSON, only supports object and array')
     }
-    return JSON.parse(str);
+    return JSON.parse(str)
   }
 
-  const len = req.headers['content-length'];
-  const encoding = req.headers['content-encoding'] || 'identity';
-  if (len && encoding === 'identity') options.length = ~~len;
-  options.limit = options.limit || '1mb';
-  const strict = options.strict !== false;
+  const len = req.headers['content-length']
+  const encoding = req.headers['content-encoding'] || 'identity'
+  if (len && encoding === 'identity') options.length = ~~len
+  options.limit = options.limit || '1mb'
+  const strict = options.strict !== false
 
-  const str = await raw(inflate(req), {...options, encoding: 'utf8'});
+  const str = await raw(inflate(req), { ...options, encoding: 'utf8' })
   try {
-    return parse(str);
+    return parse(str)
   } catch (err) {
-    err.status = 400;
-    err.body = str;
-    throw err;
+    err.status = 400
+    err.body = str
+    throw err
   }
 }

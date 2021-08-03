@@ -7,5 +7,4 @@ import type { GenerateScriptOptions } from '../bin'
 export const genRoutes = ({}: GenerateScriptOptions) => {
   // const funcDir = path.resolve(pwd, FUNCION_FILE_DIR)
   // const files = getFiles(funcDir)
-
 }

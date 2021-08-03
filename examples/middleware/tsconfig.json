@@ -21,7 +21,11 @@
     "esModuleInterop": true,
     "stripInternal": true,
     "lib": ["ESNext"],
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": ".",
+    "outDir": "./dist"
   },
+  "include": [
+    "src",
+    "functions"
+  ]
 }

@@ -47,8 +47,13 @@ export const createLogger = (options?: LoggerOptions) => {
     contentLength: number,
     event: LoggerEvent,
   ) => {
-    const length = [204, 205, 304].includes(status) ? '' : contentLength ? bytes(contentLength) : '-'
-    const upstream = event === 'error' ? 'xxx' : event === 'close' ? '-x-' : '-->'
+    const length = [204, 205, 304].includes(status)
+      ? ''
+      : contentLength
+      ? bytes(contentLength)
+      : '-'
+    const upstream =
+      event === 'error' ? 'xxx' : event === 'close' ? '-x-' : '-->'
 
     print(
       `  ${upstream} %s %s %s %s`,
@@ -76,7 +81,10 @@ export const defaultPrettyNumberOptions: Required<PrettyNumberOptions> = {
   separator: '.',
 }
 
-export const prettyNumber = function (number: number | string, options?: PrettyNumberOptions) {
+export const prettyNumber = function (
+  number: number | string,
+  options?: PrettyNumberOptions,
+) {
   const config = {
     ...defaultPrettyNumberOptions,
     ...options,
@@ -88,8 +96,9 @@ export const prettyNumber = function (number: number | string, options?: PrettyN
   return [text, ...rest].join(separator)
 }
 
-
 export const prettyTime = (start: number): string => {
   const delta = Date.now() - start
-  return prettyNumber(delta < 10000 ? `${delta}ms` : `${Math.round(delta / 1000)}s`)
+  return prettyNumber(
+    delta < 10000 ? `${delta}ms` : `${Math.round(delta / 1000)}s`,
+  )
 }
