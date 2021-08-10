@@ -6,6 +6,7 @@ import {
   List,
   TypeOf,
 } from 'farrow-faas-runtime'
+import { useRandom } from '../middlewares/random'
 
 const Todo = Struct({
   content: String,
@@ -29,10 +30,12 @@ export default createFunc(
     ),
   },
   ({ id }) => {
+    const limit = useRandom()
+
     if (mockData[id]) {
       return {
         type: 'GetTodosSuccess' as const,
-        todos: mockData[id],
+        todos: mockData[id].slice(0, limit),
       }
     } else {
       return {

@@ -19,11 +19,11 @@ export const generateRoutes = async (pwd: string): Promise<string> => {
 }
 
 export const routes2Str = (routes: PathRoute[]) => {
-  const importStatements = routes.map(route => {
+  const importStatements = routes.map((route) => {
     return `import ${route.name} from '${route.filepath}'\n`
   })
 
-  const routesItems = routes.map(route => {
+  const routesItems = routes.map((route) => {
     return `
   {
     path: '${route.path}',
@@ -41,12 +41,12 @@ ${routesItems}
 }
 
 export type PathRoute = {
-  name: string,
-  path: string,
+  name: string
+  path: string
   filepath: string
 }
 const getRoutesFromDisk = (pwd: string): PathRoute[] => {
-  const files = getFiles(pwd).map(filename => path.resolve(pwd, filename))
+  const files = getFiles(pwd).map((filename) => path.resolve(pwd, filename))
 
   return files.map((filepath) => {
     const name = getNameFromFilename(pwd, filepath)

@@ -5,6 +5,10 @@
     "outDir": "./dist",
     "composite": true
   },
-  "references": [],
+  "references": [
+    {
+      "path": "../runtime/tsconfig.json"
+    }
+  ],
   "include": ["src"]
 }

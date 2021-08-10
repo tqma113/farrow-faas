@@ -1,6 +1,7 @@
 import { start } from 'farrow-faas-runtime/starter'
 
-declare let routePath: string
+declare let routesPath: string
+declare let middlewaresPath: string | null
 declare let port: string
 
 const loadModule = <M = any>(module: any): M => {
@@ -8,12 +9,12 @@ const loadModule = <M = any>(module: any): M => {
 }
 
 const main = () => {
-  import(routePath)
-    .then((module) => {
-      return loadModule<any>(module)
+  Promise.all([import(routesPath), middlewaresPath ? import(middlewaresPath) : void 0])
+    .then(([routes, load]) => {
+      return [loadModule<any>(routes), load ? loadModule<any>(load) : void 0] as const
     })
-    .then((routes) => {
-      start(routes, { port })
+    .then(([routes, load]) => {
+      start(routes, { port, loadMiddlewares: load })
     })
 }
 

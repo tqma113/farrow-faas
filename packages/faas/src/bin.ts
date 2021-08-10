@@ -3,14 +3,13 @@ import chalk from 'chalk'
 import leven from 'leven'
 import { dev } from './scripts/dev'
 import { bundle } from './scripts/bundle'
-import { start } from './scripts/start'
-import { genRoutes } from './scripts/genRoutes'
 
 const program = new Command()
 
 export type DevScriptOptions = {
   dir?: string
   entry?: string
+  middlewares?: string
 }
 program
   .command('dev')
@@ -25,6 +24,7 @@ export type BundleScriptOptions = {
   dir?: string
   output?: string
   entry?: string
+  middlewares?: string
   port?: string
 }
 program
@@ -38,29 +38,6 @@ program
     bundle(options)
   })
 
-export type StartScriptOptions = {
-  dir?: string
-  entry?: string
-}
-program
-  .command('start')
-  .description(`start development mode at ${process.cwd()}`)
-  .option('-d, --dir <dir>', 'bundle path')
-  .option('-e, --entry <entry>', 'entry routes file path')
-  .action((options: StartScriptOptions) => {
-    start(options)
-  })
-
-export type GenerateScriptOptions = {
-  dir?: string
-}
-program
-  .command('generate')
-  .description(`generate entry routes file at ${process.cwd()}`)
-  .option('-d, --dir <dir>', 'root path')
-  .action((options: GenerateScriptOptions) => {
-    genRoutes(options)
-  })
 program.arguments('<command>').action((cmd) => {
   program.outputHelp()
   console.log(`  ` + chalk.red(`Unknown command ${chalk.yellow(cmd)}.`))

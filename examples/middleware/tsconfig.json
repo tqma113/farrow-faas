@@ -24,8 +24,5 @@
     "rootDir": ".",
     "outDir": "./dist"
   },
-  "include": [
-    "src",
-    "functions"
-  ]
+  "include": ["src", "functions"]
 }

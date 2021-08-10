@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { Result, Ok, Err } from './result'
 import { loadModule, getFiles, getNameFromFilename } from './utils'
-import { FUNCION_FILE_DIR } from './constants'
+import { FUNCION_FILE_DIR, FILE_EXTENSIONS, ROUTES_FILE_NAME } from './constants'
 import type { Route } from 'farrow-faas-runtime'
 
 export const getRoutes = async (pwd: string): Promise<Route[]> => {
@@ -22,10 +22,8 @@ const checkFileExists = async (filename: string) => {
     .then(() => true)
     .catch(() => false)
 }
-const ROUTES_FILE_NAME = 'routes'
-const ROUTES_EXTENSIONS = ['ts', 'js', 'json']
 const search = async (pwd: string): Promise<Result<Route[], void>> => {
-  for (const extension of ROUTES_EXTENSIONS) {
+  for (const extension of FILE_EXTENSIONS) {
     const absoluePath = path.resolve(pwd, `${ROUTES_FILE_NAME}.${extension}`)
     const isExist = await checkFileExists(absoluePath)
     if (isExist) {
@@ -40,7 +38,7 @@ const search = async (pwd: string): Promise<Result<Route[], void>> => {
 }
 
 const getRoutesFromDisk = (pwd: string): Route[] => {
-  const files = getFiles(pwd).map(filename => path.resolve(pwd, filename))
+  const files = getFiles(pwd).map((filename) => path.resolve(pwd, filename))
 
   return files.map((filename) => {
     return {
@@ -49,4 +47,3 @@ const getRoutesFromDisk = (pwd: string): Route[] => {
     }
   })
 }
-

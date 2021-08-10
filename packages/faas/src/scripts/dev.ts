@@ -1,12 +1,13 @@
 import path from 'path'
 import * as asyncHooksNode from 'farrow-pipeline/asyncHooks.node'
-import type { Route } from 'farrow-faas-runtime'
+import type { Route, FuncMiddlewaresLoader } from 'farrow-faas-runtime'
 import { getRoutes } from '../routes'
+import { getMiddlewares } from '../middlewares'
 import { start } from 'farrow-faas-runtime/starter'
 import { getFunc, loadModule } from '../utils'
 import type { DevScriptOptions } from '../bin'
 
-export const dev = ({ dir, entry }: DevScriptOptions) => {
+export const dev = ({ dir, entry, middlewares }: DevScriptOptions) => {
   const pwd = dir || process.cwd()
 
   // enable async hooks
@@ -21,22 +22,35 @@ export const dev = ({ dir, entry }: DevScriptOptions) => {
     return entry ? loadRoutes(path.resolve(pwd, entry)) : getRoutes(pwd)
   }
 
+  const resolveMiddlewares = () => {
+    return middlewares ? loadMiddlewares(path.resolve(pwd, middlewares)) : getMiddlewares(pwd)
+  }
+
   resolveRoutes()
     .then((routes) =>
-      Promise.all(
+      Promise.all([
+        Promise.all(
         routes.map(async (route) => ({
           ...route,
           func: await getFunc(pwd, route.func),
         })),
       ),
+      resolveMiddlewares()
+      ])
     )
-    .then((routes) => {
-      start(routes, { port: 3000 })
+    .then(([routes, load]) => {
+      start(routes, { port: 3000, loadMiddlewares: load })
     })
 }
 
 export const loadRoutes = async (routePath: string): Promise<Route[]> => {
   return import(routePath).then((module) => {
     return loadModule<Route[]>(module)
+  })
+}
+
+export const loadMiddlewares = async (routePath: string): Promise<FuncMiddlewaresLoader> => {
+  return import(routePath).then((module) => {
+    return loadModule<FuncMiddlewaresLoader>(module)
   })
 }

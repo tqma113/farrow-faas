@@ -14,19 +14,6 @@ export const UnmatchedError = (path: string): UnmatchedError => {
   }
 }
 
-export const service = async (routes: Route[]) => {
-  const matcher = await createMatcher(routes)
-  return async (path: string, input: Readonly<JsonType>) => {
-    const func = matcher(path)
-
-    if (!func) {
-      return UnmatchedError(path)
-    }
-
-    return func.run(input)
-  }
-}
-
 export type Matcher = (pathname: string) => FuncType | null
 export const createMatcher = async (routes: Route[]): Promise<Matcher> => {
   const finalRoutes: IntactRoute[] = await Promise.all(routes.map(createRoute))
@@ -54,7 +41,10 @@ type IntactRoute = {
 const createRoute = async (route: Route): Promise<IntactRoute> => {
   const finalRoute: Route = Object.assign({}, route)
   const matcher = match(finalRoute.path)
-  const intactRoute: IntactRoute = Object.assign({ matcher }, { func: await loadFunc(route.func) })
+  const intactRoute: IntactRoute = Object.assign(
+    { matcher },
+    { func: await loadFunc(route.func) },
+  )
   return intactRoute
 }
 
@@ -62,10 +52,12 @@ function cleanPath(path: string): string {
   return path.replace(/\/\//g, '/')
 }
 
-export const loadFunc = async (module: FuncType | (() => Promise<{ default: FuncType }>)): Promise<FuncType> => {
+export const loadFunc = async (
+  module: FuncType | (() => Promise<{ default: FuncType }>),
+): Promise<FuncType> => {
   if (isFunc(module)) {
     return module
   }
 
-  return module().then(module => module.default || module)
+  return module().then((module) => module.default || module)
 }
