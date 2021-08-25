@@ -1,0 +1,32 @@
+{
+  "name": "farrow-faas",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "files": [
+    "src",
+    "dist",
+    "esm"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/bytes": "^3.1.1",
+    "@types/co-body": "^5.1.1",
+    "@types/inflation": "^2.0.1",
+    "@types/media-typer": "^1.1.1",
+    "@types/raw-body": "^2.3.0",
+    "bytes": "^3.1.0",
+    "farrow-api": "^1.10.8",
+    "farrow-pipeline": "^1.10.6",
+    "farrow-schema": "^1.10.8",
+    "inflation": "^2.0.0",
+    "media-typer": "^1.1.0",
+    "module": "^1.2.5",
+    "path-to-regexp": "^6.2.0",
+    "raw-body": "^2.4.1",
+    "tslib": "^2.1.0"
+  }
+}
