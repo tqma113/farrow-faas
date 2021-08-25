@@ -1,4 +1,5 @@
 import path from 'path'
+import { build } from 'esbuild'
 import { checkFileExists } from '../utils'
 import {
   FILE_EXTENSIONS,
@@ -22,16 +23,16 @@ export const bundle = async ({
   const entryPath: string = entry
     ? path.resolve(pwd, entry)
     : (await searchRoutes(pwd)) || (await generateRoutes(pwd))
-  const middlewaresPath: string | null = middlewares
+  const middlewaresPath: string = middlewares
     ? path.resolve(pwd, middlewares)
-    : await searchMiddlewares(pwd)
+    : (await searchMiddlewares(pwd)) || ''
 
-  require('esbuild').build({
+  await build({
     bundle: true,
     inject: [SHIM_PATH],
     define: {
       routesPath: '"' + entryPath + '"',
-      middlewaresPath: '"' + middlewaresPath + '"',
+      middlewaresPath: '"' + middlewaresPath  + '"',
       port,
     },
     entryPoints: [entryPath],

@@ -19,7 +19,8 @@ export const generateRoutes = async (pwd: string): Promise<string> => {
 
 export const routes2Str = (routes: PathRoute[]) => {
   const importStatements = routes.map((route) => {
-    return `import ${route.name} from '${route.filepath}'\n`
+    const filepath = route.filepath.split('.').slice(0, -1).join('.')
+    return `import ${route.name} from '${filepath}'\n`
   })
 
   const routesItems = routes.map((route) => {
@@ -30,7 +31,7 @@ export const routes2Str = (routes: PathRoute[]) => {
   },
     `
   })
-  return `import { createRoutes } from 'farrow-faas-runtime'
+  return `import { createRoutes } from 'farrow-faas'
 ${importStatements}
 
 export default createRoutes([
