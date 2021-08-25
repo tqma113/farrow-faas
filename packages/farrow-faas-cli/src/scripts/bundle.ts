@@ -1,6 +1,10 @@
 import path from 'path'
 import { checkFileExists } from '../utils'
-import { FILE_EXTENSIONS, ROUTES_FILE_NAME, MIDDLEWARES_FILE_NAME } from '../constants'
+import {
+  FILE_EXTENSIONS,
+  ROUTES_FILE_NAME,
+  MIDDLEWARES_FILE_NAME,
+} from '../constants'
 import { generateRoutes } from '../generate'
 import type { BundleScriptOptions } from '../bin'
 
@@ -25,7 +29,11 @@ export const bundle = async ({
   require('esbuild').build({
     bundle: true,
     inject: [SHIM_PATH],
-    define: { routesPath: '"' + entryPath + '"', middlewaresPath:  '"' + middlewaresPath + '"', port },
+    define: {
+      routesPath: '"' + entryPath + '"',
+      middlewaresPath: '"' + middlewaresPath + '"',
+      port,
+    },
     entryPoints: [entryPath],
     outdir: output,
     platform: 'node',
@@ -46,7 +54,10 @@ const searchRoutes = async (pwd: string): Promise<string | null> => {
 
 const searchMiddlewares = async (pwd: string): Promise<string | null> => {
   for (const extension of FILE_EXTENSIONS) {
-    const absoluePath = path.resolve(pwd, `${MIDDLEWARES_FILE_NAME}.${extension}`)
+    const absoluePath = path.resolve(
+      pwd,
+      `${MIDDLEWARES_FILE_NAME}.${extension}`,
+    )
     const isExist = await checkFileExists(absoluePath)
     if (isExist) {
       return absoluePath
@@ -55,4 +66,3 @@ const searchMiddlewares = async (pwd: string): Promise<string | null> => {
 
   return null
 }
-

@@ -2,7 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import { Result, Ok, Err } from './result'
 import { loadModule, getFiles, getNameFromFilename } from './utils'
-import { FUNCION_FILE_DIR, FILE_EXTENSIONS, ROUTES_FILE_NAME } from './constants'
+import {
+  FUNCION_FILE_DIR,
+  FILE_EXTENSIONS,
+  ROUTES_FILE_NAME,
+} from './constants'
 import type { Route } from 'farrow-faas'
 
 export const getRoutes = async (pwd: string): Promise<Route[]> => {

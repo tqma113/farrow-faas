@@ -1,11 +1,4 @@
-import {
-  createFunc,
-  Struct,
-  Union,
-  Literal,
-  List,
-  TypeOf,
-} from 'farrow-faas'
+import { createFunc, Struct, Union, Literal, List, TypeOf } from 'farrow-faas'
 import { useRandom } from '../middlewares/random'
 
 const Todo = Struct({

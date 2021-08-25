@@ -1,11 +1,4 @@
-import {
-  createFunc,
-  Struct,
-  Union,
-  Literal,
-  List,
-  TypeOf,
-} from 'farrow-faas'
+import { createFunc, Struct, Union, Literal, List, TypeOf } from 'farrow-faas'
 
 const Todo = Struct({
   content: String,

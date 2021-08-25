@@ -23,20 +23,22 @@ export const dev = ({ dir, entry, middlewares }: DevScriptOptions) => {
   }
 
   const resolveMiddlewares = () => {
-    return middlewares ? loadMiddlewares(path.resolve(pwd, middlewares)) : getMiddlewares(pwd)
+    return middlewares
+      ? loadMiddlewares(path.resolve(pwd, middlewares))
+      : getMiddlewares(pwd)
   }
 
   resolveRoutes()
     .then((routes) =>
       Promise.all([
         Promise.all(
-        routes.map(async (route) => ({
-          ...route,
-          func: await getFunc(pwd, route.func),
-        })),
-      ),
-      resolveMiddlewares()
-      ])
+          routes.map(async (route) => ({
+            ...route,
+            func: await getFunc(pwd, route.func),
+          })),
+        ),
+        resolveMiddlewares(),
+      ]),
     )
     .then(([routes, load]) => {
       start(routes, { port: 3000, loadMiddlewares: load })
@@ -49,7 +51,9 @@ export const loadRoutes = async (routePath: string): Promise<Route[]> => {
   })
 }
 
-export const loadMiddlewares = async (routePath: string): Promise<FuncMiddlewaresLoader> => {
+export const loadMiddlewares = async (
+  routePath: string,
+): Promise<FuncMiddlewaresLoader> => {
   return import(routePath).then((module) => {
     return loadModule<FuncMiddlewaresLoader>(module)
   })

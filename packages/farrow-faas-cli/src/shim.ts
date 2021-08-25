@@ -9,9 +9,15 @@ const loadModule = <M = any>(module: any): M => {
 }
 
 const main = () => {
-  Promise.all([import(routesPath), middlewaresPath ? import(middlewaresPath) : void 0])
+  Promise.all([
+    import(routesPath),
+    middlewaresPath ? import(middlewaresPath) : void 0,
+  ])
     .then(([routes, load]) => {
-      return [loadModule<any>(routes), load ? loadModule<any>(load) : void 0] as const
+      return [
+        loadModule<any>(routes),
+        load ? loadModule<any>(load) : void 0,
+      ] as const
     })
     .then(([routes, load]) => {
       start(routes, { port, loadMiddlewares: load })

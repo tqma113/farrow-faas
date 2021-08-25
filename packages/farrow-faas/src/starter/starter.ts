@@ -42,15 +42,12 @@ export const start = async (
 
     const body = (req as any).body ?? (await getBody(req))
 
-    return router.run(
-      body,
-      {
-        container: createContainer(),
-        onLast: () => {
-          return UnmatchedError(pathname)
-        },
+    return router.run(body, {
+      container: createContainer(),
+      onLast: () => {
+        return UnmatchedError(pathname)
       },
-    ) as any
+    }) as any
   }, options)
 
   if (options.port) {

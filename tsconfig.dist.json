@@ -9,7 +9,7 @@
     },
     {
       "path": "./packages/farrow-faas-cli/tsconfig.json"
-    },
+    }
   ],
   "exclude": ["./examples/*"]
 }
