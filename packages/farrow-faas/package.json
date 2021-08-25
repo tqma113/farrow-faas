@@ -5,7 +5,9 @@
   "files": [
     "src",
     "dist",
-    "esm"
+    "esm",
+    "starter.js",
+    "starter.d.ts"
   ],
   "scripts": {
     "build": "tsc",
