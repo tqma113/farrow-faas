@@ -7,7 +7,7 @@
   },
   "references": [
     {
-      "path": "../runtime/tsconfig.json"
+      "path": "../farrow-faas/tsconfig.json"
     }
   ],
   "include": ["src"]

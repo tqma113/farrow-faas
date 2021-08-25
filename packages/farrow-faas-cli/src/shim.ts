@@ -1,4 +1,4 @@
-import { start } from 'farrow-faas-runtime/starter'
+import { start } from 'farrow-faas/starter'
 
 declare let routesPath: string
 declare let middlewaresPath: string | null

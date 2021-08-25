@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "references": [
+    {
+      "path": "./packages/farrow-faas/tsconfig.json"
+    },
+    {
+      "path": "./packages/farrow-faas-cli/tsconfig.json"
+    },
+  ],
+  "exclude": ["./examples/*"]
+}

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import globby from 'globby'
-import { isFunc, FuncType, Route as DraftRoute } from 'farrow-faas-runtime'
+import { isFunc, FuncType, Route as DraftRoute } from 'farrow-faas'
 
 export const getFunc = async (
   pwd: string,

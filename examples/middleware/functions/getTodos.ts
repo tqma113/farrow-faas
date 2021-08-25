@@ -5,7 +5,7 @@ import {
   Literal,
   List,
   TypeOf,
-} from 'farrow-faas-runtime'
+} from 'farrow-faas'
 import { useRandom } from '../middlewares/random'
 
 const Todo = Struct({

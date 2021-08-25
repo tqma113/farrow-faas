@@ -1,4 +1,3 @@
-import fs from 'fs'
 import path from 'path'
 import { checkFileExists } from '../utils'
 import { FILE_EXTENSIONS, ROUTES_FILE_NAME, MIDDLEWARES_FILE_NAME } from '../constants'

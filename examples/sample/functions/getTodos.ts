@@ -5,7 +5,7 @@ import {
   Literal,
   List,
   TypeOf,
-} from 'farrow-faas-runtime'
+} from 'farrow-faas'
 
 const Todo = Struct({
   content: String,

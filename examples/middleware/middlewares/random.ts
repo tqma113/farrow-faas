@@ -1,4 +1,4 @@
-import { FuncMiddleware, createContext } from 'farrow-faas-runtime'
+import { FuncMiddleware, createContext } from 'farrow-faas'
 
 const RandomContext = createContext(0)
 

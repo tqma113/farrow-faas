@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { loadModule } from './utils'
 import { FILE_EXTENSIONS, MIDDLEWARES_FILE_NAME } from './constants'
-import type { FuncMiddlewaresLoader } from 'farrow-faas-runtime'
+import type { FuncMiddlewaresLoader } from 'farrow-faas'
 
 export const getMiddlewares = async (pwd: string): Promise<FuncMiddlewaresLoader | undefined> => {
   for (const extension of FILE_EXTENSIONS) {

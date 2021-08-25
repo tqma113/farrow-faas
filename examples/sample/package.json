@@ -1,7 +1,7 @@
 {
   "name": "example-sample",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
   "license": "MIT",
   "scripts": {
     "dev": "farrow-faas dev",
@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "typescript": "^4.3.4",
+    "farrow-faas": "1.10.6",
     "farrow-faas-cli": "1.10.6"
   }
 }
