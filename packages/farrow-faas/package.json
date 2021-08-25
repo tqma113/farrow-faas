@@ -1,6 +1,6 @@
 {
   "name": "farrow-faas",
-  "version": "1.10.6",
+  "version": "0.0.0",
   "main": "dist/index.js",
   "files": [
     "src",
@@ -13,16 +13,15 @@
   },
   "license": "MIT",
   "dependencies": {
-    "farrow-api": "^1.10.8",
-    "farrow-pipeline": "^1.10.6",
-    "farrow-schema": "^1.10.8",
     "@types/bytes": "^3.1.1",
     "@types/co-body": "^5.1.1",
     "@types/inflation": "^2.0.1",
     "@types/media-typer": "^1.1.1",
     "@types/raw-body": "^2.3.0",
-    "farrow-faas": "1.10.6",
     "bytes": "^3.1.0",
+    "farrow-api": "^1.10.8",
+    "farrow-pipeline": "^1.10.6",
+    "farrow-schema": "^1.10.8",
     "inflation": "^2.0.0",
     "media-typer": "^1.1.0",
     "module": "^1.2.5",
