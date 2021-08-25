@@ -1,6 +1,6 @@
 {
   "name": "farrow-faas-cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "bin": {
     "farrow-faas": "bin.js"
