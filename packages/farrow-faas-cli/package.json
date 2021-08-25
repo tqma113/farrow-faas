@@ -1,6 +1,6 @@
 {
   "name": "farrow-faas-cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "bin": {
     "farrow-faas": "bin.js"
@@ -18,7 +18,7 @@
   "dependencies": {
     "commander": "^8.0.0",
     "esbuild": "^0.12.15",
-    "farrow-faas": "^0.0.0",
+    "farrow-faas": "^0.1.0",
     "leven": "^3.1.0",
     "tslib": "^2.1.0"
   },
