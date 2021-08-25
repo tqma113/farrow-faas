@@ -32,7 +32,7 @@ export const bundle = async ({
     inject: [SHIM_PATH],
     define: {
       routesPath: '"' + entryPath + '"',
-      middlewaresPath: '"' + middlewaresPath  + '"',
+      middlewaresPath: '"' + middlewaresPath + '"',
       port,
     },
     entryPoints: [entryPath],
