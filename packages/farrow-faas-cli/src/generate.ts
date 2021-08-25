@@ -2,7 +2,6 @@ import fs from 'fs/promises'
 import path from 'path'
 import { FUNCION_FILE_DIR } from './constants'
 import { getFiles, getNameFromFilename } from './utils'
-import type { Route } from '../../farrow-faas/dist'
 
 const GENERATE_ROUTES_PATH = 'node_modules/.farrow/routes.ts'
 
