@@ -36,8 +36,6 @@ export const start = async (
 
     const func = matcher(pathname)
 
-    console.log({ pathname, func })
-
     if (func) {
       const body = (req as any).body ?? (await getBody(req))
 
