@@ -48,7 +48,6 @@ export const start = async (
   })
 
   const server = createHttpServer(async (req, res) => {
-
     return router.run(req, {
       container: createContainer(),
       onLast: (req) => {
