@@ -4,4 +4,3 @@ export * from 'farrow-pipeline'
 
 export * from './func'
 export * from './middleware'
-export * from './router'

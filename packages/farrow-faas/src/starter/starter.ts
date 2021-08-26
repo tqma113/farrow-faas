@@ -1,7 +1,7 @@
 import { createContainer } from 'farrow-pipeline'
 import { createHttpServer, ServerOptions, getBody } from './server'
 import { createMatcher, UnmatchedError } from './service'
-import { createRouter } from '../runtime'
+import { createRouter } from './router'
 import type { Route, FuncMiddlewaresLoader } from '../runtime'
 import type { Server } from 'http'
 
@@ -25,7 +25,7 @@ export const start = async (
     router.use(...middlewares)
   }
 
-  const server = createHttpServer(async (req, res) => {
+  router.use(async (req, next) => {
     if (typeof req.url !== 'string') {
       throw new Error(`req.url is not existed`)
     }
@@ -36,16 +36,23 @@ export const start = async (
 
     const func = matcher(pathname)
 
+    console.log({ pathname, func })
+
     if (func) {
-      router.use(func)
+      const body = (req as any).body ?? (await getBody(req))
+
+      return func.run(body)
+    } else {
+      return next()
     }
+  })
 
-    const body = (req as any).body ?? (await getBody(req))
+  const server = createHttpServer(async (req, res) => {
 
-    return router.run(body, {
+    return router.run(req, {
       container: createContainer(),
-      onLast: () => {
-        return UnmatchedError(pathname)
+      onLast: (req) => {
+        return UnmatchedError(req.url!)
       },
     }) as any
   }, options)

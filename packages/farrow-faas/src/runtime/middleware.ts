@@ -1,10 +1,12 @@
+import { IncomingMessage } from 'http'
 import { Middleware, MaybeAsync } from 'farrow-pipeline'
 import { enable } from 'farrow-pipeline/asyncHooks.node'
+import { JsonType } from 'farrow-schema'
 
-export type FuncMiddleware = Middleware<unknown, MaybeAsync<unknown>>
+export type FuncMiddleware = Middleware<IncomingMessage, MaybeAsync<JsonType>>
 export type FuncMiddlewares = FuncMiddleware[]
 
-export type Provider<O> = (options: O) => Middleware<unknown, unknown>
+export type Provider<O> = (options: O) => FuncMiddleware
 
 export type ProviderConfig<O> = {
   Provider: Provider<O>
