@@ -1,4 +1,4 @@
-import { createContainer } from 'farrow-pipeline'
+import { createContainer, useContainer } from 'farrow-pipeline'
 import { createHttpServer, ServerOptions, getBody } from './server'
 import { createMatcher, UnmatchedError } from './service'
 import { createRouter } from './router'
@@ -39,7 +39,9 @@ export const start = async (
     if (func) {
       const body = (req as any).body ?? (await getBody(req))
 
-      return func.run(body)
+      const container = useContainer()
+
+      return func.run(body, { container })
     } else {
       return next()
     }

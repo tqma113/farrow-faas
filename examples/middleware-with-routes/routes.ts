@@ -1,4 +1,4 @@
-import { createRoutes } from 'farrow-faas-runtime'
+import { createRoutes } from 'farrow-faas'
 import getTodos from './functions/getTodos'
 
 export default createRoutes([

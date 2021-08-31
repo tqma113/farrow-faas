@@ -4,8 +4,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "farrow-faas dev",
-    "bundle": "farrow-faas bundle",
+    "dev": "farrow-faas dev --entry ./routes.ts",
+    "bundle": "farrow-faas bundle --entry ./routes.ts",
     "server": "node ./dist/index.js"
   },
   "devDependencies": {
