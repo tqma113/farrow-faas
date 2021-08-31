@@ -22,7 +22,10 @@ const main = () => {
       ] as const
     })
     .then(([routes, load]) => {
-      start(routes, { port: port || process.env.PORT || DEFAULT_PORT, loadMiddlewares: load })
+      start(routes, {
+        port: port || process.env.PORT || DEFAULT_PORT,
+        loadMiddlewares: load,
+      })
     })
 }
 
