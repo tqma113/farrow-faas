@@ -1,5 +1,5 @@
 {
-  "name": "example-middleware",
+  "name": "example-middleware-with-routes",
   "version": "0.1.9",
   "license": "MIT",
   "private": true,
