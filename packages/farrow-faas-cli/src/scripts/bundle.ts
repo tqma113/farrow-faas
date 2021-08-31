@@ -16,7 +16,7 @@ export const bundle = async ({
   entry,
   middlewares,
   output,
-  port = '80',
+  port = 'undefined',
 }: BundleScriptOptions) => {
   const pwd = dir || process.cwd()
 

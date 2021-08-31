@@ -4,6 +4,8 @@ declare let routesPath: string
 declare let middlewaresPath: string | null
 declare let port: string
 
+const DEFAULT_PORT = 80
+
 const loadModule = <M = any>(module: any): M => {
   return module.default || module
 }
@@ -20,7 +22,7 @@ const main = () => {
       ] as const
     })
     .then(([routes, load]) => {
-      start(routes, { port, loadMiddlewares: load })
+      start(routes, { port: port || process.env.PORT || DEFAULT_PORT, loadMiddlewares: load })
     })
 }
 
