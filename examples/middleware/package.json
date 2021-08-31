@@ -1,6 +1,6 @@
 {
   "name": "example-middleware",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -9,8 +9,8 @@
     "server": "node ./dist/index.js"
   },
   "devDependencies": {
-    "farrow-faas": "^0.1.7",
-    "farrow-faas-cli": "^0.1.9",
+    "farrow-faas": "^0.1.10",
+    "farrow-faas-cli": "^0.1.10",
     "typescript": "^4.3.4"
   }
 }
