@@ -10,6 +10,7 @@ import { generateRoutes } from '../generate'
 import type { BundleScriptOptions } from '../bin'
 
 const SHIM_PATH = path.resolve(__dirname, '../shim.js')
+const BUNDLE_ENTRY_FILE_PATH = './dist/index.js'
 
 export const bundle = async ({
   dir,
@@ -36,7 +37,7 @@ export const bundle = async ({
       port,
     },
     entryPoints: [entryPath],
-    outdir: output,
+    outfile: output || BUNDLE_ENTRY_FILE_PATH,
     platform: 'node',
   })
 }

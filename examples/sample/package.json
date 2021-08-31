@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "farrow-faas dev",
-    "bundle": "farrow-faas bundle --output dist",
-    "server": "node ./dist/routes.js"
+    "bundle": "farrow-faas bundle",
+    "server": "node ./dist/index.js"
   },
   "devDependencies": {
     "farrow-faas": "^0.1.7",
