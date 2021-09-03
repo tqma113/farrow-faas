@@ -9,7 +9,6 @@ export const useRandom = () => {
 export const Provider = (): FuncMiddleware => {
   return (input, next) => {
     RandomContext.set(Math.random() * 10)
-    console.log(useRandom())
 
     return next(input)
   }

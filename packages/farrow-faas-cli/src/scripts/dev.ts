@@ -1,6 +1,6 @@
 import path from 'path'
 import * as asyncHooksNode from 'farrow-pipeline/asyncHooks.node'
-import type { Route, FuncMiddlewaresLoader } from 'farrow-faas'
+import type { Route, ProviderConfigsLoader } from 'farrow-faas'
 import { getRoutes } from '../routes'
 import { getMiddlewares } from '../middlewares'
 import { start } from 'farrow-faas/starter'
@@ -53,8 +53,8 @@ export const loadRoutes = async (routePath: string): Promise<Route[]> => {
 
 export const loadMiddlewares = async (
   routePath: string,
-): Promise<FuncMiddlewaresLoader> => {
+): Promise<ProviderConfigsLoader> => {
   return import(routePath).then((module) => {
-    return loadModule<FuncMiddlewaresLoader>(module)
+    return loadModule<ProviderConfigsLoader>(module)
   })
 }

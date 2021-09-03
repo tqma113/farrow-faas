@@ -3,15 +3,23 @@ import { Middleware, MaybeAsync } from 'farrow-pipeline'
 import { enable } from 'farrow-pipeline/asyncHooks.node'
 import { JsonType } from 'farrow-schema'
 
-export type FuncMiddleware = Middleware<IncomingMessage, MaybeAsync<JsonType>>
+export type FuncMiddleware = Middleware<IncomingMessage, MaybeAsync<any>>
 export type FuncMiddlewares = FuncMiddleware[]
 
 export type Provider<O> = (options: O) => FuncMiddleware
 
+export type Path = string | RegExp
+export type ProviderPath = {
+  includes?: Path | Path[]
+} | {
+  excludes?: Path | Path[]
+}
+
 export type ProviderConfig<O> = {
   Provider: Provider<O>
   options: O
-}
+} & ProviderPath
+export type ProviderConfigs = ProviderConfig<any>[]
 
 type PDC<O> = ProviderConfig<O>
 
@@ -378,27 +386,17 @@ export const defineMiddlewares = <
         PDC<Z>,
       ],
 ) => {
-  const load = () => {
-    const middlewares: FuncMiddlewares = []
 
-    for (const item of list) {
-      const { Provider, options } = item
-      middlewares.push(Provider(options as any))
-    }
-
-    return middlewares
-  }
-
-  return Object.assign(load, {
-    [FUNC_MIDDLEWARES_LOADER]: true,
+  return Object.assign(list, {
+    [FUNC_PROVIDERS_LOADER]: true,
   })
 }
 
-const FUNC_MIDDLEWARES_LOADER = Symbol('FUNC_MIDDLEWARES_LOADER')
-export type FuncMiddlewaresLoader = () => FuncMiddlewares
+const FUNC_PROVIDERS_LOADER = Symbol('FUNC_PROVIDERS_LOADER')
+export type ProviderConfigsLoader = () => ProviderConfigs
 
 export const isFuncMiddlewaresLoader = (
   input: any,
-): input is FuncMiddlewaresLoader => {
-  return typeof input === 'function' && input[FUNC_MIDDLEWARES_LOADER]
+): input is ProviderConfigsLoader => {
+  return typeof input === 'function' && input[FUNC_PROVIDERS_LOADER]
 }
