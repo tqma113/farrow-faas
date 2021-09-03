@@ -34,14 +34,14 @@ export const start = async (
 
     const [pathname = '/'] = url.split('?')
 
-    const func = matcher(pathname)
+    const handleInput = matcher(pathname)
 
-    if (func) {
+    if (handleInput) {
       const body = (req as any).body ?? (await getBody(req))
 
       const container = useContainer()
 
-      return func.run(body, { container })
+      return handleInput(body, { container })
     } else {
       return next()
     }

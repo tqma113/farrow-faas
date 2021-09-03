@@ -6,6 +6,7 @@ import {
   useContainer,
   Container,
   AsyncPipeline,
+  RunPipelineOptions
 } from 'farrow-pipeline'
 
 import {
@@ -82,9 +83,12 @@ export type WarpeOutput<T> =
   | HandleSuccess<T>
   | InputValidationError
   | OutputValidationError
-
+export type FuncImplOptions = {
+  container?: Container
+}
 export type FuncImpl<T extends ApiDefinition> = (
   input: TypeOfTypeable<T['input']>,
+  options?: FuncImplOptions
 ) => MaybeAsync<
   Prettier<WarpeOutput<TypeOf<ToSchemaCtor<TypeableContentType<T['output']>>>>>
 >
@@ -128,31 +132,31 @@ export const createFunc = <T extends ApiDefinition>(
     >
   >()
 
-  apiPipeline.use(async (input) => {
-    const inputResult = validateApiInput(input)
-    if (inputResult.isErr) {
-      return InputValidationError(getErrorMessage(inputResult.value))
-    }
-
-    const output = await func(input)
-
-    const outputResult = validateApiOutput(output)
-    if (outputResult.isErr) {
-      return OutputValidationError(getErrorMessage(outputResult.value))
-    }
-
-    return HandleSuccess(output)
-  })
-
   const apiSchema: ApiSchema<T> = {
     type: 'Api',
     definition,
   }
 
-  const apiImpl = (input: TypeOfTypeable<T['input']>) => {
-    const container = useContainerSafe()
+  const apiImpl = (input: TypeOfTypeable<T['input']>, options?: FuncImplOptions) => {
+    const container = options?.container || useContainerSafe()
+
     return apiPipeline.run(input, {
       container,
+      onLast: async (input) => {
+        const inputResult = validateApiInput(input)
+        if (inputResult.isErr) {
+          return InputValidationError(getErrorMessage(inputResult.value))
+        }
+    
+        const output = await func(input)
+    
+        const outputResult = validateApiOutput(output)
+        if (outputResult.isErr) {
+          return OutputValidationError(getErrorMessage(outputResult.value))
+        }
+    
+        return HandleSuccess(output)
+      }
     })
   }
 
