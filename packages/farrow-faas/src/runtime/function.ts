@@ -60,14 +60,6 @@ export type RuntimeError = {
   message: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-const RuntimeError = (message: string): RuntimeError => {
-  return {
-    type: 'RuntimeError',
-    message,
-  }
-}
-
 const getErrorMessage = (error: ValidationError) => {
   let { message } = error
 
@@ -90,7 +82,6 @@ export type WarpeOutput<T> =
   | HandleSuccess<T>
   | InputValidationError
   | OutputValidationError
-  | RuntimeError
 
 export type FuncImpl<T extends ApiDefinition> = (
   input: TypeOfTypeable<T['input']>,
@@ -143,18 +134,14 @@ export const createFunc = <T extends ApiDefinition>(
       return InputValidationError(getErrorMessage(inputResult.value))
     }
 
-    try {
-      const output = await func(input)
+    const output = await func(input)
 
-      const outputResult = validateApiOutput(output)
-      if (outputResult.isErr) {
-        return OutputValidationError(getErrorMessage(outputResult.value))
-      }
-
-      return HandleSuccess(output)
-    } catch (error) {
-      return RuntimeError(error.message)
+    const outputResult = validateApiOutput(output)
+    if (outputResult.isErr) {
+      return OutputValidationError(getErrorMessage(outputResult.value))
     }
+
+    return HandleSuccess(output)
   })
 
   const apiSchema: ApiSchema<T> = {
