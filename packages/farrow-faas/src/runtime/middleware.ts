@@ -9,11 +9,13 @@ export type FuncMiddlewares = FuncMiddleware[]
 export type Provider<O> = (options: O) => FuncMiddleware
 
 export type Path = string | RegExp
-export type ProviderPath = {
-  includes?: Path | Path[]
-} | {
-  excludes?: Path | Path[]
-}
+export type ProviderPath =
+  | {
+      includes?: Path | Path[]
+    }
+  | {
+      excludes?: Path | Path[]
+    }
 
 export type ProviderConfig<O> = {
   Provider: Provider<O>
@@ -386,7 +388,6 @@ export const defineMiddlewares = <
         PDC<Z>,
       ],
 ) => {
-
   return Object.assign(list, {
     [FUNC_PROVIDERS_LOADER]: true,
   })

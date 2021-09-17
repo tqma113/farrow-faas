@@ -1,7 +1,7 @@
 import fs from 'fs/promises'
 import path from 'path'
+import { getFiles, getName } from './utils'
 import { FUNCION_FILE_DIR } from './constants'
-import { getFiles, getNameFromFilename } from './utils'
 
 const GENERATE_ROUTES_PATH = 'node_modules/.farrow/routes.ts'
 
@@ -49,7 +49,7 @@ const getRoutesFromDisk = (pwd: string): PathRoute[] => {
   const files = getFiles(pwd).map((filename) => path.resolve(pwd, filename))
 
   return files.map((filepath) => {
-    const name = getNameFromFilename(pwd, filepath)
+    const name = getName(pwd, filepath)
     return {
       name,
       path: `/${name}`,

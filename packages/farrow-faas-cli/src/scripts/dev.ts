@@ -1,10 +1,11 @@
 import path from 'path'
 import * as asyncHooksNode from 'farrow-pipeline/asyncHooks.node'
-import type { Route, ProviderConfigsLoader } from 'farrow-faas'
 import { getRoutes } from '../routes'
 import { getMiddlewares } from '../middlewares'
 import { start } from 'farrow-faas/starter'
 import { getFunc, loadModule } from '../utils'
+
+import type { Route, ProviderConfigsLoader } from 'farrow-faas'
 import type { DevScriptOptions } from '../bin'
 
 export const dev = ({ dir, entry, middlewares }: DevScriptOptions) => {

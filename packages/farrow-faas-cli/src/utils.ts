@@ -41,7 +41,7 @@ export const checkFileExists = async (filename: string) => {
     .catch(() => false)
 }
 
-export const getNameFromFilename = (pwd: string, filename: string): string => {
+export const getName = (pwd: string, filename: string): string => {
   const relativeName = filename.substring(pwd.length)
   const relativePath = relativeName.split('.').slice(0, -1).join('.')
 

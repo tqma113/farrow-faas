@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { Result, Ok, Err } from './result'
-import { loadModule, getFiles, getNameFromFilename } from './utils'
+import { loadModule, getFiles, getName } from './utils'
 import {
   FUNCION_FILE_DIR,
   FILE_EXTENSIONS,
@@ -46,7 +46,7 @@ const getRoutesFromDisk = (pwd: string): Route[] => {
 
   return files.map((filename) => {
     return {
-      path: `/${getNameFromFilename(pwd, filename)}`,
+      path: `/${getName(pwd, filename)}`,
       func: () => import(path.resolve(pwd, filename)),
     }
   })

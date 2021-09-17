@@ -1,7 +1,10 @@
 import { ProviderConfigs } from '../runtime'
 import { FinalRoute } from './routes'
 
-export const mountMiddlewares = (routes: FinalRoute[], providerConfigs: ProviderConfigs) => {
+export const mountMiddlewares = (
+  routes: FinalRoute[],
+  providerConfigs: ProviderConfigs,
+) => {
   for (const providerConfig of providerConfigs) {
     const { options, Provider } = providerConfig
 
@@ -12,7 +15,7 @@ export const mountMiddlewares = (routes: FinalRoute[], providerConfigs: Provider
         const { path, func } = route
 
         if (Array.isArray(providerConfig.includes)) {
-          const shouldMount = providerConfig.includes.some(pathOrRegexp => {
+          const shouldMount = providerConfig.includes.some((pathOrRegexp) => {
             const regexp = new RegExp(pathOrRegexp)
             return regexp.test(path)
           })
@@ -32,7 +35,7 @@ export const mountMiddlewares = (routes: FinalRoute[], providerConfigs: Provider
         const { path, func } = route
 
         if (Array.isArray(providerConfig.excludes)) {
-          const shouldMount = providerConfig.excludes.every(pathOrRegexp => {
+          const shouldMount = providerConfig.excludes.every((pathOrRegexp) => {
             const regexp = new RegExp(pathOrRegexp)
             return !regexp.test(path)
           })

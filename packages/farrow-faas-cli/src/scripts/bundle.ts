@@ -1,12 +1,13 @@
 import path from 'path'
 import { build } from 'esbuild'
 import { checkFileExists } from '../utils'
+import { generateRoutes } from '../generate'
 import {
   FILE_EXTENSIONS,
   ROUTES_FILE_NAME,
   MIDDLEWARES_FILE_NAME,
 } from '../constants'
-import { generateRoutes } from '../generate'
+
 import type { BundleScriptOptions } from '../bin'
 
 const SHIM_PATH = path.resolve(__dirname, '../shim.js')

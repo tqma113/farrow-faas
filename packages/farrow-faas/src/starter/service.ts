@@ -39,10 +39,7 @@ export type IntactRoute = FinalRoute & {
 export const createRoute = async (route: FinalRoute): Promise<IntactRoute> => {
   const finalRoute: Route = Object.assign({}, route)
   const matcher = match(finalRoute.path)
-  const intactRoute: IntactRoute = Object.assign(
-    route,
-    { matcher }
-  )
+  const intactRoute: IntactRoute = Object.assign(route, { matcher })
   return intactRoute
 }
 

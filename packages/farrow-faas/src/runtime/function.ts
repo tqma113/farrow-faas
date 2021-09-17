@@ -6,7 +6,7 @@ import {
   useContainer,
   Container,
   AsyncPipeline,
-  RunPipelineOptions
+  RunPipelineOptions,
 } from 'farrow-pipeline'
 
 import {
@@ -88,7 +88,7 @@ export type FuncImplOptions = {
 }
 export type FuncImpl<T extends ApiDefinition> = (
   input: TypeOfTypeable<T['input']>,
-  options?: FuncImplOptions
+  options?: FuncImplOptions,
 ) => MaybeAsync<
   Prettier<WarpeOutput<TypeOf<ToSchemaCtor<TypeableContentType<T['output']>>>>>
 >
@@ -137,7 +137,10 @@ export const createFunc = <T extends ApiDefinition>(
     definition,
   }
 
-  const apiImpl = (input: TypeOfTypeable<T['input']>, options?: FuncImplOptions) => {
+  const apiImpl = (
+    input: TypeOfTypeable<T['input']>,
+    options?: FuncImplOptions,
+  ) => {
     const container = options?.container || useContainerSafe()
 
     return apiPipeline.run(input, {
@@ -147,16 +150,16 @@ export const createFunc = <T extends ApiDefinition>(
         if (inputResult.isErr) {
           return InputValidationError(getErrorMessage(inputResult.value))
         }
-    
+
         const output = await func(input)
-    
+
         const outputResult = validateApiOutput(output)
         if (outputResult.isErr) {
           return OutputValidationError(getErrorMessage(outputResult.value))
         }
-    
+
         return HandleSuccess(output)
-      }
+      },
     })
   }
 
