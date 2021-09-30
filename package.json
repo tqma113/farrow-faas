@@ -10,6 +10,7 @@
     ]
   },
   "devDependencies": {
+    "@changesets/cli": "^2.17.0",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.10",
     "@types/shelljs": "^0.7.9",
@@ -37,19 +38,22 @@
     "typescript": "^4.2.2"
   },
   "scripts": {
-    "build": "run-s clean build:source clean:tests",
+    "build": "run-s clean:build build:source clean:tests",
     "build:dist": "tsc -b ./tsconfig.dist.json",
-    "build:source": "run-p build:dist",
-    "clean": "shx rm -rf ./packages/*/*.tsbuildinfo && shx rm -rf ./packages/*/{dist,esm}",
+    "build:esm": "tsc -b ./tsconfig.esm.json",
+    "build:source": "run-p build:dist build:esm",
+    "clean": "run-p clean:build clean:deps",
+    "clean:build": "shx rm -rf ./packages/*/*.tsbuildinfo && shx rm -rf ./packages/*/{dist,esm}",
+    "clean:deps": "shx rm -rf ./{packages,examples}/*/node_modules && rm -rf node_modules",
     "clean:tests": "shx rm -rf ./packages/*/{dist,esm}/**/__tests__",
     "lint": "eslint --report-unused-disable-directives ./packages",
-    "format": "run-p format:source",
-    "format:source": "prettier ./**/*.{ts,ts,js} --write",
-    "test": "jest",
-    "test:coverage": "jest --collectCoverage --coverage",
-    "bootstrap": "lerna bootstrap --hoist",
-    "init": "npm install && npm run bootstrap && npm run build",
-    "release": "lerna publish",
-    "prerelease": "npm run format && git add -A && npm run build && npm run test"
+    "format": "run-p format:source format:other",
+    "format:other": "prettier ./**/*.{md,yml,json,html} --write",
+    "format:source": "prettier ./**/*.{ts,tsx,js} --write",
+    "init": "pnpm install && pnpm run build",
+    "test": "pnpm run test --filter ./packages",
+    "test:coverage": "pnpm run test:coverage --filter ./packages",
+    "release": "pnpm changeset version && pnpm publish -r",
+    "prerelease": "pnpm run format && git add -A && pnpm run build && pnpm run test"
   }
 }
