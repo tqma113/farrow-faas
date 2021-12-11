@@ -1,5 +1,11 @@
 # farrow-faas-cli
 
+## 0.1.13
+
+### Patch Changes
+
+- 93bc8c0: fix bundle index
+
 ## 0.1.12
 
 ### Patch Changes
