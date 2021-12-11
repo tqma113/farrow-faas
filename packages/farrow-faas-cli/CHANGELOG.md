@@ -1,5 +1,13 @@
 # farrow-faas-cli
 
+## 0.1.14
+
+### Patch Changes
+
+- a49d788: fix with pnpm
+- Updated dependencies [a49d788]
+  - farrow-faas@0.1.13
+
 ## 0.1.13
 
 ### Patch Changes
