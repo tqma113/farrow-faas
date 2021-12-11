@@ -56,11 +56,7 @@ export const getName = (pwd: string, filename: string): string => {
   })
 
   const name = nameSplit.join('/')
-  const finalName = name.endsWith('index')
-    ? name.substring(0, name.length - 5)
-    : name
-
-  return clearName(finalName)
+  return clearName(name)
 }
 
 const clearName = (routeName: string): string => {
