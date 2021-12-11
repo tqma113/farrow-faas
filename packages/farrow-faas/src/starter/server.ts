@@ -86,10 +86,11 @@ export const createHttpServer = (
       res.setHeader('Content-Length', length)
       res.end(content)
     } catch (error) {
-      const message = error?.stack ?? ''
+      const message = error instanceof Error ? error?.stack || '' : ''
 
       if (!res.headersSent) {
-        res.statusCode = error.statusCode ?? 500
+        // @ts-ignore
+        res.statusCode = error instanceof Error ? error.statusCode : 500
         res.setHeader('Content-Type', 'text/plain')
         res.setHeader('Content-Length', Buffer.byteLength(message))
       }
@@ -297,7 +298,9 @@ export const parseBody = async (
   try {
     return parse(str)
   } catch (err) {
+    // @ts-ignore
     err.status = 400
+    // @ts-ignore
     err.body = str
     throw err
   }

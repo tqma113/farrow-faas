@@ -1,5 +1,5 @@
 import path from 'path'
-import * as asyncHooksNode from 'farrow-pipeline/asyncHooks.node'
+import * as asyncHooksNode from 'farrow-faas/node'
 import { getRoutes } from '../routes'
 import { getMiddlewares } from '../middlewares'
 import { start } from 'farrow-faas/starter'
