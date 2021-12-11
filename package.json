@@ -38,10 +38,7 @@
     "typescript": "^4.2.2"
   },
   "scripts": {
-    "build": "run-s clean:build build:source clean:tests",
-    "build:dist": "tsc -b ./tsconfig.dist.json",
-    "build:esm": "tsc -b ./tsconfig.esm.json",
-    "build:source": "run-p build:dist build:esm",
+    "build": "tsc -b ./tsconfig.dist.json",
     "clean": "run-p clean:build clean:deps",
     "clean:build": "shx rm -rf ./packages/*/*.tsbuildinfo && shx rm -rf ./packages/*/{dist,esm}",
     "clean:deps": "shx rm -rf ./{packages,examples}/*/node_modules && rm -rf node_modules",
